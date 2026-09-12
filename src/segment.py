@@ -4,7 +4,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-INACTIVITY_GAP_SECONDS = 60
+INACTIVITY_GAP_SECONDS = 10
+BOUNDARY_SCORE_THRESHOLD = 3
 
 
 def parse_timestamp(event):
@@ -39,24 +40,74 @@ def load_events(session_dir):
     return events
 
 
+def app_identity(event):
+    app = event.get("context", {}).get("active_app") or {}
+
+    return (
+        app.get("process_name"),
+        app.get("app_name"),
+        app.get("window_title"),
+    )
+
+
+def boundary_score(previous_event, current_event, gap):
+    score = 0
+    event_type = current_event.get("event_type")
+
+    # Strong signal discovered during Dataset A exploration.
+    if event_type == "browser_navigation":
+        score += 3
+
+    # app_switch happens frequently even within Chrome.
+    # Only count it when the actual application/window changes.
+    if event_type == "app_switch":
+        previous_app = app_identity(previous_event)
+        current_app = app_identity(current_event)
+
+        if previous_app != current_app:
+            score += 2
+
+    if event_type == "window_title_change":
+        score += 1
+
+    if event_type == "window_state_change":
+        score += 1
+
+    # Keep inactivity as an additional signal, but lower the
+    # threshold substantially compared with the baseline.
+    if gap > INACTIVITY_GAP_SECONDS:
+        score += 3
+
+    return score
+
+
 def segment_events(events):
     if not events:
         return []
 
     segments = []
+
     start = events[0][0]
-    previous = events[0][0]
+    previous_timestamp, previous_event = events[0]
 
-    for timestamp, _ in events[1:]:
-        gap = (timestamp - previous).total_seconds()
+    for timestamp, event in events[1:]:
+        gap = (timestamp - previous_timestamp).total_seconds()
 
-        if gap > INACTIVITY_GAP_SECONDS:
-            segments.append((start, previous))
+        score = boundary_score(
+            previous_event,
+            event,
+            gap
+        )
+
+        if score >= BOUNDARY_SCORE_THRESHOLD:
+            segments.append((start, previous_timestamp))
             start = timestamp
 
-        previous = timestamp
+        previous_timestamp = timestamp
+        previous_event = event
 
-    segments.append((start, previous))
+    segments.append((start, previous_timestamp))
+
     return segments
 
 
@@ -90,7 +141,12 @@ def main():
 
     with output_file.open("w", encoding="utf-8") as f:
         for segment in all_segments:
-            f.write(json.dumps(segment, ensure_ascii=False) + "\n")
+            f.write(
+                json.dumps(
+                    segment,
+                    ensure_ascii=False
+                ) + "\n"
+            )
 
     print(f"Created {len(all_segments)} segments")
     print(f"Output: {output_file}")

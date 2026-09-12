@@ -76,3 +76,32 @@ I will start with a simple rule-based baseline and test it against Dataset A gro
 ### Next-
 
 Implement the first segmentation script and evaluate it on Dataset A.
+
+----------------------------------------------------------------------------------------------------------
+
+## Segmentation Experiments — Dataset A
+
+### Baseline V1
+
+- I first tried a simple rule-based approach where a new segment was created whenever there was more than 60 seconds of inactivity.
+- This produced 104 segments, while the GT reference had 1,696 clean process segments.
+- Only 16 predicted segments had an IoU of at least 0.5, with an average best IoU of 0.29.
+- This made it clear that the 60-second inactivity rule was too simple and was merging many separate processes together.
+
+### V2 Experiment
+
+- I then looked at the raw events around the GT process boundaries to understand which events might help identify a new process.
+- `app_switch` appeared frequently around boundaries, but it was not reliable on its own because it could also happen when switching between windows of the same application.
+- `screenshot_smart` was also not useful as a direct boundary signal since it is generated regularly as part of the recording process.
+- One interesting pattern was `browser_navigation`: it appeared around 52.9% of GT boundaries, but only around 1.1% of the normal activity windows I checked.
+- `app_switch` appeared around 53.6% of boundaries and 19.3% of normal windows, so I treated it as a supporting signal rather than a main boundary indicator.
+- Based on these observations, I implemented a second rule-based version combining browser navigation, application/window changes, and inactivity.
+- V2 produced 2,655 segments.
+- 535 of these had an IoU of at least 0.5, but the average best IoU dropped to 0.262.
+- So V2 improved the number of reasonably matching segments compared with V1, but it also created too many small segments. In other words, V1 was under-segmenting while V2 was over-segmenting.
+- I am therefore treating V2 as an intermediate experiment rather than the final approach.
+
+### Next Step
+
+- I will look more closely at GT boundaries where `browser_navigation` is not present.
+- The goal is to find additional reliable patterns that can help balance the segmentation instead of relying too heavily on any single event type.
