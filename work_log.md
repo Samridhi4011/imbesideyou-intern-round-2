@@ -105,3 +105,18 @@ Implement the first segmentation script and evaluate it on Dataset A.
 
 - I will look more closely at GT boundaries where `browser_navigation` is not present.
 - The goal is to find additional reliable patterns that can help balance the segmentation instead of relying too heavily on any single event type.
+
+
+### V3 Experiment
+
+- V2 produced 2,655 segments, so it was clearly cutting the event stream too often.
+- I looked more closely at the events around the GT process boundaries. This showed that `app_switch` by itself was too noisy, while browser navigation and actual application/window changes were more useful signals.
+- Based on this, I tried a third rule-based version that treats these events as possible boundary points, but avoids creating very short segments by keeping a minimum segment duration.
+- V3 produced 1,726 segments, which is much closer to the 1,696 GT reference segments.
+- 844 predicted segments had an IoU of at least 0.5, with an average best IoU of 0.464.
+- This was a clear improvement over both earlier attempts: V1 had an average best IoU of 0.290, while V2 had 0.262.
+- For now, V3 looks like the most promising approach. I will do one more round of error analysis before deciding whether it is good enough to apply to Dataset B.
+
+### Next Step
+
+- Look at where V3 is still getting the boundaries wrong and see if a small adjustment can improve the results without bringing back the over-segmentation seen in V2.

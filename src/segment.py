@@ -4,8 +4,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-INACTIVITY_GAP_SECONDS = 10
-BOUNDARY_SCORE_THRESHOLD = 3
+MIN_SEGMENT_SECONDS = 15
 
 
 def parse_timestamp(event):
@@ -50,35 +49,41 @@ def app_identity(event):
     )
 
 
-def boundary_score(previous_event, current_event, gap):
-    score = 0
-    event_type = current_event.get("event_type")
+def is_boundary_candidate(previous_event, current_event):
+    current_type = current_event.get("event_type")
 
-    # Strong signal discovered during Dataset A exploration.
-    if event_type == "browser_navigation":
-        score += 3
+    # Browser navigation is a strong process-change candidate,
+    # but it is not treated as a boundary by itself without
+    # the minimum-segment safeguard below.
+    if current_type == "browser_navigation":
+        return True
 
-    # app_switch happens frequently even within Chrome.
-    # Only count it when the actual application/window changes.
-    if event_type == "app_switch":
+    # Only treat app_switch as meaningful when the application
+    # or window actually changes.
+    if current_type == "app_switch":
         previous_app = app_identity(previous_event)
         current_app = app_identity(current_event)
 
-        if previous_app != current_app:
-            score += 2
+        previous_process, previous_name, previous_title = previous_app
+        current_process, current_name, current_title = current_app
 
-    if event_type == "window_title_change":
-        score += 1
+        if previous_process != current_process:
+            return True
 
-    if event_type == "window_state_change":
-        score += 1
+        if previous_name != current_name:
+            return True
 
-    # Keep inactivity as an additional signal, but lower the
-    # threshold substantially compared with the baseline.
-    if gap > INACTIVITY_GAP_SECONDS:
-        score += 3
+        if previous_title != current_title:
+            return True
 
-    return score
+    # Window changes are weaker candidates.
+    if current_type in {
+        "window_title_change",
+        "window_state_change",
+    }:
+        return True
+
+    return False
 
 
 def segment_events(events):
@@ -91,15 +96,18 @@ def segment_events(events):
     previous_timestamp, previous_event = events[0]
 
     for timestamp, event in events[1:]:
-        gap = (timestamp - previous_timestamp).total_seconds()
 
-        score = boundary_score(
+        candidate = is_boundary_candidate(
             previous_event,
-            event,
-            gap
+            event
         )
 
-        if score >= BOUNDARY_SCORE_THRESHOLD:
+        current_duration = (
+            previous_timestamp - start
+        ).total_seconds()
+
+        # Do not create very short segments.
+        if candidate and current_duration >= MIN_SEGMENT_SECONDS:
             segments.append((start, previous_timestamp))
             start = timestamp
 
@@ -108,12 +116,30 @@ def segment_events(events):
 
     segments.append((start, previous_timestamp))
 
-    return segments
+    # Merge any short segments produced near boundaries.
+    merged = []
+
+    for segment in segments:
+
+        duration = segment[1] - segment[0]
+
+        if merged and duration.total_seconds() < MIN_SEGMENT_SECONDS:
+            merged[-1] = (
+                merged[-1][0],
+                segment[1]
+            )
+        else:
+            merged.append(segment)
+
+    return merged
 
 
 def main():
     if len(sys.argv) != 3:
-        print("Usage: python src/segment.py <dataset_dir> <output_file>")
+        print(
+            "Usage: python src/segment.py "
+            "<dataset_dir> <output_file>"
+        )
         sys.exit(1)
 
     dataset_dir = Path(sys.argv[1])
@@ -122,6 +148,7 @@ def main():
     all_segments = []
 
     for session_dir in sorted(dataset_dir.glob("ses_*")):
+
         events = load_events(session_dir)
         segments = segment_events(events)
 
@@ -137,7 +164,10 @@ def main():
                 "label": "unknown_process"
             })
 
-    output_file.parent.mkdir(parents=True, exist_ok=True)
+    output_file.parent.mkdir(
+        parents=True,
+        exist_ok=True
+    )
 
     with output_file.open("w", encoding="utf-8") as f:
         for segment in all_segments:
