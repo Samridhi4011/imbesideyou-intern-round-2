@@ -49,3 +49,30 @@ observe with its ground truth.
 ### Next
 
 Start exploring Dataset A and look at some actual sessions and events.
+
+----------------------------------------------------------------------------------------------------------
+
+## Day 2 — Dataset A Exploration
+
+- Started exploring Dataset A using the ground truth in `gt.jsonl`.
+- First looked at the `task_started` events to understand what individual tasks look like.
+- Checked a few examples from processes K and A.
+- Compared the ground-truth task timestamps with the raw events in `events.jsonl`.
+- Observed that the same task can involve multiple actions such as clicking, typing, form input, clipboard operations and switching between applications.
+- In some examples, Chrome was the main application while Notepad and clipboard operations were also involved.
+- This made it clear that a business process cannot be identified only by looking at one application or one type of event.
+- I also noticed that the raw events contain a lot of low-level activity, so I need to find useful signals rather than treating every event equally.
+
+### Initial observation
+
+The time gap between events, application changes and user activity seem like useful signals for finding process boundaries.
+
+However, I do not want to rely only on time gaps because a user can switch to another application or temporarily stop working on a process and then return to it.
+
+### Decision
+
+I will start with a simple rule-based baseline and test it against Dataset A ground truth. Based on the results, I can improve the segmentation logic if needed.
+
+### Next-
+
+Implement the first segmentation script and evaluate it on Dataset A.
