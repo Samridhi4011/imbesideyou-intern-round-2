@@ -166,3 +166,16 @@ However, I still need to understand what the user is actually accomplishing in t
 ### V3 Investigation — Missing Raw Event Capture 
 - During V3 validation, I found some sessions where the ground-truth process timeline extends beyond the available raw event capture. For example, one session had a later chunk manifest but no corresponding events.jsonl, so the raw-event loader could only recover the events that were actually available. I treated this as missing capture rather than artificially creating process boundaries from ground truth.
 
+### Decision on V4
+
+- Initially, I was planning to build a V4 segmentation approach because V3 still had a significant number of low-IoU cases.
+- Before changing the algorithm, I checked some of the cases where V3 had no overlap with the GT.
+- This investigation showed that at least some of these cases were caused by missing raw event capture rather than incorrect segmentation logic. In one session, the GT timeline continued into a later chunk, but that chunk did not contain an `events.jsonl` file.
+- Because there were no raw events available for that part of the session, changing the segmentation rules would not actually solve the problem.
+- I therefore decided not to build V4 just for the sake of another iteration. Instead, I will keep V3 as the current segmentation approach and move forward with the recovered Dataset B processes for workflow analysis and automation candidate selection.
+
+### Next Step
+
+- Analyze the recovered Dataset B workflows in more detail.
+- Compare their frequency, duration and amount of repetitive manual interaction.
+- Use these observations to select the workflow with the strongest potential for automation.
