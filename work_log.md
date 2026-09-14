@@ -162,3 +162,7 @@ However, I still need to understand what the user is actually accomplishing in t
 
 - Inspect the most frequent repeated workflows in more detail.
 - Estimate which workflow has the highest combination of frequency, time spent and repetitive manual interaction.
+
+### V3 Investigation — Missing Raw Event Capture 
+- During V3 validation, I found some sessions where the ground-truth process timeline extends beyond the available raw event capture. For example, one session had a later chunk manifest but no corresponding events.jsonl, so the raw-event loader could only recover the events that were actually available. I treated this as missing capture rather than artificially creating process boundaries from ground truth.
+
