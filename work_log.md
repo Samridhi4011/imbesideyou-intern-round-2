@@ -131,3 +131,34 @@ Implement the first segmentation script and evaluate it on Dataset A.
 - I first checked the basic segment statistics such as duration, number of segments per session and the distribution of segment lengths.
 - Most recovered segments were relatively short. The median duration was around 23 seconds and the average was around 28 seconds.
 - I then looked at the event types inside the recovered segments to understand what kind of work was actually happening.
+
+### Application Patterns
+
+- I checked which applications commonly appeared together inside the recovered segments.
+- The strongest combination was Microsoft Edge + Microsoft Word, appearing in 182 recovered segments.
+- This combination was present across 9 different sessions, so it was not limited to just one user/session.
+- I also looked at the window titles and found repeated combinations of specific business systems in Edge and specific Word documents.
+- Some of the repeated Edge systems were the financial accounting system, HR/payroll system and order/inventory management system.
+- The same Word documents also appeared repeatedly with these systems.
+
+### Edge + Word Workflow
+
+- I inspected actual event sequences from the Edge + Word segments instead of relying only on frequency counts.
+- A repeated pattern was visible where the user worked in Edge, switched to Word for a short period, and then returned to Edge.
+- After returning to Edge, clipboard changes were often followed by keyboard shortcuts, keystrokes and browser form input.
+- This looks like a repeated reference/copy-and-enter type of workflow rather than random application switching.
+- I also noticed that `screenshot_smart` appears regularly during active work, so I do not want to use it as a process boundary by itself.
+- Similarly, `app_switch` is useful as a supporting signal but should not be treated as a boundary on its own.
+
+### Current Understanding
+
+At this point, the Dataset B analysis is showing that there are repeated workflows involving a business system in Edge and supporting work in Word/other applications.
+
+The Edge + Word workflow looks particularly interesting because it occurs frequently and contains repetitive interactions such as clicking, typing, clipboard activity and browser form input.
+
+However, I still need to understand what the user is actually accomplishing in these workflows before choosing the final automation candidate. Frequency alone is not enough to decide which process should be automated.
+
+### Next Step
+
+- Inspect the most frequent repeated workflows in more detail.
+- Estimate which workflow has the highest combination of frequency, time spent and repetitive manual interaction.
