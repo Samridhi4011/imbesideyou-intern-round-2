@@ -120,3 +120,14 @@ Implement the first segmentation script and evaluate it on Dataset A.
 ### Next Step
 
 - Look at where V3 is still getting the boundaries wrong and see if a small adjustment can improve the results without bringing back the over-segmentation seen in V2.
+
+----------------------------------------------------------------------------------------------------------
+
+## Dataset B Exploration
+
+- After getting a reasonably good result from V3 on Dataset A, I added Dataset B to the repository and applied the segmentation approach to it.
+- Since Dataset B does not have ground truth, I could not directly calculate IoU or compare the boundaries in the same way as Dataset A.
+- The initial recovery produced 343 segments across 15 sessions.
+- I first checked the basic segment statistics such as duration, number of segments per session and the distribution of segment lengths.
+- Most recovered segments were relatively short. The median duration was around 23 seconds and the average was around 28 seconds.
+- I then looked at the event types inside the recovered segments to understand what kind of work was actually happening.
