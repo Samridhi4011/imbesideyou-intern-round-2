@@ -212,5 +212,39 @@ to the user.
 - The browser event identifies the clicked element as a button with the ID `btn-ob-ok` and class `btn success`.
 - The corresponding screenshots show a completion notification such as `照合完了しました` after this interaction.
 - This suggests that the repeated workflow is not only note entry, but also includes a specific verification/completion action after the note is entered.
-- I therefore refined the automation scope to focus on filling the identified `ob-note` field and triggering the corresponding verification action.
+- - I therefore refined the automation scope to focus on preparing/filling the identified `ob-note` field and supporting the corresponding verification action, while retaining human review before completion.
 - I will keep the prototype generic rather than hard-coding a particular employee or record, since the logs contain multiple record IDs and local application instances.
+
+**### Automation Prototype**
+
+- I implemented a small web-based prototype for the selected HR onboarding workflow.
+- The prototype was kept separate from the segmentation and analysis code under the `prototype/` directory.
+- The interface was designed around the workflow observed in the logs, including the HR onboarding context, a reference-document selector, the `ob-note` textarea and the verification completion action.
+- The prototype currently supports three reference documents that were repeatedly observed during the Dataset B analysis:
+  - `nyusha_checklist_shinsotsu_batch`
+  - `gyomu_itaku_ukeire_tetsuzuki`
+  - `gyomu_itaku_kyuuyo_kitei`
+- Selecting a reference document and clicking `Prepare Note` automatically prepares and inserts a corresponding note into the `ob-note` field.
+- The generated note can be manually edited before completion.
+- The `照合完了` action remains disabled until a note has been prepared, providing a basic safety check.
+- After human review, the user can complete the verification and the prototype changes the record status to `完了`.
+
+**### Prototype Testing**
+
+I tested the prototype using the following cases:
+
+- Prepared a note using the first reference document.
+- Manually edited the generated note before completing the verification.
+- Completed the verification successfully after review.
+- Tested all three reference-document options and confirmed that each produced a different note.
+- Confirmed that the completion action cannot be triggered before preparing a note.
+- Tested the empty-note case and confirmed that verification is not completed when the note is empty.
+
+All of the above test cases behaved as expected.
+
+**### Implementation Decision**
+
+- I chose a small deterministic web-based prototype rather than a more complex AI agent because the identified automation point is a repetitive and clearly defined form-entry interaction.
+- The prototype focuses on reducing repetitive data-entry work rather than attempting to automate the underlying HR decision.
+- Human review is intentionally retained before completion because the raw logs do not expose the actual clipboard text or enough business context to determine whether a particular note is correct.
+- The original HR application used during data collection was not available in the current development environment, so the prototype reproduces the relevant observed interaction as a self-contained local demonstration rather than connecting to the original application.
