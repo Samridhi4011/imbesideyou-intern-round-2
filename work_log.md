@@ -179,3 +179,28 @@ However, I still need to understand what the user is actually accomplishing in t
 - Analyze the recovered Dataset B workflows in more detail.
 - Compare their frequency, duration and amount of repetitive manual interaction.
 - Use these observations to select the workflow with the strongest potential for automation.
+
+----------------------------------------------------------------------------------------------------------
+### DAY-5
+
+### HR Onboarding Workflow Candidate
+
+- While inspecting the repeated Edge + Word activity, I looked more closely at browser form input events in Dataset B.
+- I found 89 explicit paste actions into the same HR onboarding form field (`ob-note`) across 9 of the 15 sessions.
+- The field is a textarea labelled `照合結果・特記事項を入力してください…`, and the logs explicitly record the input method as `paste`.
+- 61 of the 343 recovered Dataset B segments contain at least one paste into this field, which is about 17.8% of all recovered segments.
+- The paste actions are repeated within individual sessions, with one session containing 23 such paste events.
+- I also checked the activity before these paste events. In 53 of the 89 cases, a Microsoft Word clipboard change occurred within the previous 30 seconds.
+- The average time between the Word clipboard change and the HR form paste was about 15.2 seconds.
+- Repeated Word reference documents included onboarding checklists and procedure documents such as `nyusha_checklist_shinsotsu_batch`, `gyomu_itaku_ukeire_tetsuzuki` and `gyomu_itaku_kyuuyo_kitei`.
+- The exact clipboard contents are not available in the logs, so I am not assuming what specific text is being transferred.
+- Based on the frequency, repetition and clearly identifiable target field, I selected HR onboarding note entry as the main automation candidate for Step 3.
+
+### Automation Scope
+
+The prototype will focus on assisting with the repetitive entry of reference
+information into the HR onboarding `ob-note` field.
+
+The goal is not to fully automate the business decision itself. The prototype
+will prepare or enter the information and leave the final review/confirmation
+to the user.
