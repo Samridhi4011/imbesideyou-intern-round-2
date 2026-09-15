@@ -204,3 +204,13 @@ information into the HR onboarding `ob-note` field.
 The goal is not to fully automate the business decision itself. The prototype
 will prepare or enter the information and leave the final review/confirmation
 to the user.
+
+### Workflow Interaction Analysis
+
+- I inspected the events immediately following the `ob-note` paste actions to understand what the user does next.
+- The logs showed that the paste is consistently followed by a mouse/browser click in the HR application within about half a second.
+- The browser event identifies the clicked element as a button with the ID `btn-ob-ok` and class `btn success`.
+- The corresponding screenshots show a completion notification such as `照合完了しました` after this interaction.
+- This suggests that the repeated workflow is not only note entry, but also includes a specific verification/completion action after the note is entered.
+- I therefore refined the automation scope to focus on filling the identified `ob-note` field and triggering the corresponding verification action.
+- I will keep the prototype generic rather than hard-coding a particular employee or record, since the logs contain multiple record IDs and local application instances.
