@@ -1,0 +1,275 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, "Noto Sans JP", sans-serif;
+  background: #f4f6fa;
+  color: #1f2937;
+}
+
+/* Header */
+
+header {
+  height: 76px;
+  background: #101b33;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo {
+  width: 42px;
+  height: 42px;
+  background: #28a9e0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 21px;
+}
+
+.brand p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #b8c2d6;
+}
+
+/* Main */
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 38px 28px;
+}
+
+.breadcrumb {
+  color: #8993a5;
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.subtitle {
+  margin-top: 8px;
+  color: #7b8495;
+}
+
+/* Record */
+
+.record-card {
+  background: white;
+  border: 1px solid #dfe4ec;
+  border-radius: 12px;
+  margin-top: 28px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.record-header {
+  padding: 22px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e5e9ef;
+}
+
+.label {
+  display: block;
+  font-size: 12px;
+  color: #8a94a6;
+  margin-bottom: 6px;
+}
+
+#record-id {
+  font-size: 18px;
+}
+
+.status {
+  background: #dff1ff;
+  color: #1682bd;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+/* Details */
+
+.record-details {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  padding: 24px 26px;
+  border-bottom: 1px solid #e5e9ef;
+}
+
+.record-details div > span:last-child {
+  font-size: 15px;
+}
+
+/* Note */
+
+.note-section {
+  padding: 28px 26px;
+}
+
+.note-section label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 150px;
+  resize: vertical;
+  border: 1px solid #cbd3df;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+}
+
+textarea:focus {
+  border-color: #28a9e0;
+  box-shadow: 0 0 0 3px rgba(40, 169, 224, 0.12);
+}
+
+/* Buttons */
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+button {
+  border: none;
+  border-radius: 7px;
+  padding: 11px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#prepare-note {
+  background: #e8f5fb;
+  color: #087da9;
+}
+
+#prepare-note:hover {
+  background: #d7eef8;
+}
+
+#btn-ob-ok {
+  background: #28a66f;
+  color: white;
+}
+
+#btn-ob-ok:disabled {
+  background: #cfd5dc;
+  cursor: not-allowed;
+}
+
+/* Automation card */
+
+.automation-card {
+  background: white;
+  border: 1px solid #dfe4ec;
+  border-radius: 12px;
+  padding: 26px;
+  margin-top: 24px;
+}
+
+.automation-card h3 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.automation-card p {
+  color: #667085;
+  line-height: 1.6;
+}
+
+.reference-box {
+  margin-top: 20px;
+}
+
+.reference-box label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+select {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #cbd3df;
+  border-radius: 7px;
+  background: white;
+  font-size: 14px;
+}
+
+.review-note {
+  margin-bottom: 0;
+  padding: 12px 14px;
+  background: #fff8e7;
+  border-radius: 7px;
+  color: #856404 !important;
+  font-size: 13px;
+}
+
+/* Toast */
+
+.toast {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  background: #1f2937;
+  color: white;
+  padding: 14px 20px;
+  border-radius: 9px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.25s ease;
+  pointer-events: none;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Responsive */
+
+@media (max-width: 800px) {
+  .record-details {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  main {
+    padding: 25px 16px;
+  }
+}

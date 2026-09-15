@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HR Onboarding Automation Prototype</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header>
+    <div class="brand">
+      <span class="logo">人事</span>
+      <div>
+        <h1>HR人事給与システム</h1>
+        <p>2026年度・人事部門</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <div class="breadcrumb">
+      人事業務 / 入社手続き
+    </div>
+
+    <h2>入社手続き</h2>
+    <p class="subtitle">Onboarding Verification</p>
+
+    <section class="record-card">
+
+      <div class="record-header">
+        <div>
+          <span class="label">Record ID</span>
+          <strong id="record-id">P3-07054374-012</strong>
+        </div>
+
+        <span class="status" id="status">
+          照合中
+        </span>
+      </div>
+
+      <div class="record-details">
+        <div>
+          <span class="label">Employee ID</span>
+          <span>E2203</span>
+        </div>
+
+        <div>
+          <span class="label">Employee</span>
+          <span>原田 明美</span>
+        </div>
+
+        <div>
+          <span class="label">Joining Date</span>
+          <span>2026-07-21</span>
+        </div>
+
+        <div>
+          <span class="label">Department</span>
+          <span>開発部</span>
+        </div>
+      </div>
+
+      <div class="note-section">
+
+        <label for="ob-note">
+          照合結果・特記事項を入力してください…
+        </label>
+
+        <textarea
+          id="ob-note"
+          placeholder="Enter verification notes here..."
+          rows="6"
+        ></textarea>
+
+        <div class="actions">
+          <button id="prepare-note" type="button">
+            Prepare Note
+          </button>
+
+          <button id="btn-ob-ok" type="button" disabled>
+            照合完了
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="automation-card">
+
+      <h3>Automation Assistant</h3>
+
+      <p>
+        Prepare the note from the selected reference information,
+        review it, and then complete the verification.
+      </p>
+
+      <div class="reference-box">
+
+        <label for="reference-select">
+          Reference document
+        </label>
+
+        <select id="reference-select">
+
+          <option value="checklist">
+            nyusha_checklist_shinsotsu_batch
+          </option>
+
+          <option value="procedure">
+            gyomu_itaku_ukeire_tetsuzuki
+          </option>
+
+          <option value="rules">
+            gyomu_itaku_kyuuyo_kitei
+          </option>
+
+        </select>
+
+      </div>
+
+      <p class="review-note">
+        ⚠ Human review is required before completion.
+      </p>
+
+    </section>
+
+  </main>
+
+  <div id="toast" class="toast">
+    照合完了しました
+  </div>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
