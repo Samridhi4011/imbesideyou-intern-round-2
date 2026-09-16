@@ -1,28 +1,61 @@
-# ImBesideYou Intern Selection Task - Round 2
+# From Operation Logs to an Automation Proposal
 
-This repo comtains my work for ImBesideYou Intership selection round2
+This project was developed as part of the Round 2 assignment for analyzing desktop operation logs, recovering business-process executions, identifying repetitive workflows, and building a working automation prototype.
 
-## What this task is about-
+The project follows the three main steps given in the assignment:
 
-I need to build automation tools where it can provide the most value and then to make a working prototype for the selected process.
+1. Recover process segments from raw operation logs.
+2. Analyze the recovered processes and identify a suitable automation candidate.
+3. Build a working prototype for the selected workflow.
 
-## Main Steps-
+---
 
-1. Identify and recover units of work from logs. (identify individual business processes by breaking continuous list)
-2. Analyze identified processes and find the best automation opportunity.
-3. To build and test automation tools which gives practical value.
+## Project Overview
 
-## Repository Structure-
+The main challenge in this assignment is that the raw operation logs contain continuous low-level user activity such as:
 
-- `data/` - local assignment datasets
-- `src/` - code used for the project
-- `analysis/` - data exploration and experiments
-- `outputs/` - generated results
-- `docs/` - documentation and final report
-- `work_log.md` - daily work, experiments and decisions
+- Mouse clicks
+- Keyboard input
+- Browser interactions
+- Application switching
+- Clipboard activity
+- Window changes
+- Screenshots
 
-## Current Status
+These events do not directly tell us where one business process starts or ends.
 
-Repository setup is complete. Next, I will start exploring Dataset A
-and use its ground truth to develop and validate the segmentation
-approach.
+I therefore started by using **Dataset A**, which contains ground truth, to experiment with different rule-based segmentation approaches. After validating the approach, I applied the selected method to **Dataset B**, which does not contain ground truth, and analyzed the recovered workflows for possible automation opportunities.
+
+The final automation candidate was an **HR onboarding verification workflow** involving repeated reference-document usage and manual entry into an HR system.
+
+---
+
+## Repository Structure
+
+```text
+.
+├── analysis/
+│   ├── gt_segments.tsv
+│   └── task_starts.tsv
+│
+├── data/
+│   ├── dataset_a/
+│   └── dataset_b/
+│
+├── outputs/
+│   ├── dataset_a_segments_baseline.jsonl
+│   ├── dataset_a_segments_v2.jsonl
+│   ├── dataset_a_segments_v3.jsonl
+│   └── dataset_b_segments.jsonl
+│
+├── prototype/
+│   ├── index.html
+│   ├── style.css
+│   ├── app.js
+│   └── README.md
+│
+├── src/
+│   └── segment.py
+│
+├── work_log.md
+└── README.md
