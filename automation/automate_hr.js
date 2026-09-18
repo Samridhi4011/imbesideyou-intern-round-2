@@ -1,6 +1,16 @@
+const fs = require("fs");
 const { chromium } = require("playwright");
 
 (async () => {
+  const referencePath = "automation/references/onboarding_reference.txt";
+
+  // Read the reference file
+  const referenceText = fs.readFileSync(referencePath, "utf8").trim();
+
+  if (!referenceText) {
+    throw new Error("Reference file is empty.");
+  }
+
   const browser = await chromium.launch({
     channel: "chrome",
     headless: false
@@ -12,14 +22,10 @@ const { chromium } = require("playwright");
     // Open the HR onboarding prototype
     await page.goto("http://127.0.0.1:8000");
 
-    // Select the reference document
-    await page.selectOption(
-      "#reference-select",
-      "checklist"
-    );
-
-    // Trigger the reference-to-HR transfer
-    await page.click("#prepare-note");
+    // Transfer the reference information into the HR note field
+    await page.fill("#ob-note", referenceText);
+    await page.locator("#ob-note").dispatchEvent("input");
+    await page.locator("#ob-note").dispatchEvent("change");
 
     // Verify that the HR note was populated
     const note = await page.inputValue("#ob-note");
@@ -28,8 +34,11 @@ const { chromium } = require("playwright");
       throw new Error("HR note was not populated.");
     }
 
-    console.log("Reference transferred to HR note successfully.");
+    console.log("Reference file read successfully.");
+    console.log("Reference information transferred to HR note successfully.");
     console.log("Human review is now required.");
+
+    await page.waitForTimeout(3000);
 
   } catch (error) {
     console.error("Automation failed:", error.message);
