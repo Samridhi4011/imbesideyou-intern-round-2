@@ -28,6 +28,68 @@
     <h2>入社手続き</h2>
     <p class="subtitle">Onboarding Verification</p>
 
+    <!-- Automation Flow -->
+
+    <section class="flow-card">
+
+      <div class="flow-header">
+        <div>
+          <h3>Observed Workflow</h3>
+          <p>Reference information is transferred into the HR verification note.</p>
+        </div>
+
+        <span class="automation-badge" id="automation-status">
+          Ready
+        </span>
+      </div>
+
+      <div class="flow">
+
+        <div class="flow-step">
+          <div class="flow-icon">📄</div>
+          <div>
+            <strong>Reference Document</strong>
+            <span>Observed Word-based reference</span>
+          </div>
+        </div>
+
+        <div class="flow-arrow">→</div>
+
+        <div class="flow-step">
+          <div class="flow-icon">↔</div>
+          <div>
+            <strong>Prepare & Transfer</strong>
+            <span>Prepare reference note</span>
+          </div>
+        </div>
+
+        <div class="flow-arrow">→</div>
+
+        <div class="flow-step">
+          <div class="flow-icon">🌐</div>
+          <div>
+            <strong>HR System</strong>
+            <span>Populate ob-note</span>
+          </div>
+        </div>
+
+        <div class="flow-arrow">→</div>
+
+        <div class="flow-step">
+          <div class="flow-icon">👤</div>
+          <div>
+            <strong>Human Review</strong>
+            <span>Review and edit</span>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- HR Record -->
+
     <section class="record-card">
 
       <div class="record-header">
@@ -42,6 +104,7 @@
       </div>
 
       <div class="record-details">
+
         <div>
           <span class="label">Employee ID</span>
           <span>E2203</span>
@@ -61,6 +124,7 @@
           <span class="label">Department</span>
           <span>開発部</span>
         </div>
+
       </div>
 
       <div class="note-section">
@@ -76,32 +140,39 @@
         ></textarea>
 
         <div class="actions">
+
           <button id="prepare-note" type="button">
-            Prepare Note
+            Transfer Reference to HR Note
           </button>
 
           <button id="btn-ob-ok" type="button" disabled>
             照合完了
           </button>
+
         </div>
 
       </div>
 
     </section>
 
+
+    <!-- Automation Assistant -->
+
     <section class="automation-card">
 
       <h3>Automation Assistant</h3>
 
       <p>
-        Prepare the note from the selected reference information,
-        review it, and then complete the verification.
+        This prototype demonstrates the repetitive reference-to-form
+        entry step observed in the operation logs. Select a reference,
+        transfer the prepared information into the HR note, review it,
+        and then complete the verification manually.
       </p>
 
       <div class="reference-box">
 
         <label for="reference-select">
-          Reference document
+          Word Reference Document
         </label>
 
         <select id="reference-select">
@@ -120,6 +191,16 @@
 
         </select>
 
+      </div>
+
+      <div class="process-note">
+        <strong>Automation scope</strong>
+
+        <p>
+          The prototype prepares the reference-based note and places it
+          into the HR form. The user remains responsible for reviewing
+          the note and confirming the verification.
+        </p>
       </div>
 
       <p class="review-note">

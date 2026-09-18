@@ -4,6 +4,8 @@ const noteField = document.getElementById("ob-note");
 const referenceSelect = document.getElementById("reference-select");
 const status = document.getElementById("status");
 const toast = document.getElementById("toast");
+const automationStatus = document.getElementById("automation-status");
+
 
 const referenceNotes = {
   checklist:
@@ -17,8 +19,9 @@ const referenceNotes = {
 };
 
 
-// Prepare Note
+// Transfer Reference to HR Note
 prepareButton.addEventListener("click", () => {
+
   const selectedReference = referenceSelect.value;
   const generatedNote = referenceNotes[selectedReference];
 
@@ -27,26 +30,32 @@ prepareButton.addEventListener("click", () => {
     return;
   }
 
-  // Automatically fill the HR note field
+  // Prepare the reference-based note
   noteField.value = generatedNote;
 
-  // Move record to review state
+  // Update HR record status
   status.textContent = "レビュー待ち";
   status.style.background = "#fff1c7";
   status.style.color = "#946200";
 
-  // Allow completion after note preparation
+  // Update automation status
+  automationStatus.textContent = "Awaiting Human Review";
+  automationStatus.style.background = "#fff1c7";
+  automationStatus.style.color = "#946200";
+
+  // Allow completion after human review
   completeButton.disabled = false;
 
-  // Let user review/edit the note
+  // Let the user review or edit the prepared note
   noteField.focus();
 
-  showToast("Verification note prepared. Please review it.");
+  showToast("Reference transferred to HR note. Please review it.");
 });
 
 
 // Complete Verification
 completeButton.addEventListener("click", () => {
+
   const note = noteField.value.trim();
 
   if (!note) {
@@ -60,6 +69,11 @@ completeButton.addEventListener("click", () => {
   status.style.background = "#dff4e8";
   status.style.color = "#16804b";
 
+  // Update automation status
+  automationStatus.textContent = "Completed";
+  automationStatus.style.background = "#dff4e8";
+  automationStatus.style.color = "#16804b";
+
   completeButton.disabled = true;
 
   showToast("Verification completed successfully.");
@@ -68,7 +82,9 @@ completeButton.addEventListener("click", () => {
 
 // Toast notification
 function showToast(message) {
+
   toast.textContent = message;
+
   toast.classList.add("show");
 
   setTimeout(() => {

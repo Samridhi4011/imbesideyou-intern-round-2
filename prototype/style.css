@@ -73,13 +73,101 @@ h2 {
   color: #7b8495;
 }
 
+
+/* Workflow Card */
+
+.flow-card {
+  background: white;
+  border: 1px solid #dfe4ec;
+  border-radius: 12px;
+  margin-top: 24px;
+  padding: 24px 26px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.flow-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.flow-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.flow-header p {
+  margin: 6px 0 0;
+  color: #667085;
+  font-size: 13px;
+}
+
+.automation-badge {
+  padding: 7px 13px;
+  border-radius: 20px;
+  background: #e8f5fb;
+  color: #087da9;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.flow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.flow-step {
+  flex: 1;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  border: 1px solid #e1e6ed;
+  border-radius: 9px;
+  background: #fafbfc;
+}
+
+.flow-icon {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef5fa;
+  border-radius: 8px;
+  font-size: 18px;
+}
+
+.flow-step strong {
+  display: block;
+  font-size: 13px;
+}
+
+.flow-step span {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #7b8495;
+}
+
+.flow-arrow {
+  color: #98a2b3;
+  font-size: 20px;
+}
+
+
 /* Record */
 
 .record-card {
   background: white;
   border: 1px solid #dfe4ec;
   border-radius: 12px;
-  margin-top: 28px;
+  margin-top: 24px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
@@ -111,6 +199,7 @@ h2 {
   font-size: 14px;
 }
 
+
 /* Details */
 
 .record-details {
@@ -124,6 +213,7 @@ h2 {
 .record-details div > span:last-child {
   font-size: 15px;
 }
+
 
 /* Note */
 
@@ -153,6 +243,7 @@ textarea:focus {
   border-color: #28a9e0;
   box-shadow: 0 0 0 3px rgba(40, 169, 224, 0.12);
 }
+
 
 /* Buttons */
 
@@ -191,7 +282,8 @@ button {
   cursor: not-allowed;
 }
 
-/* Automation card */
+
+/* Automation Card */
 
 .automation-card {
   background: white;
@@ -206,7 +298,7 @@ button {
   font-size: 20px;
 }
 
-.automation-card p {
+.automation-card > p {
   color: #667085;
   line-height: 1.6;
 }
@@ -231,6 +323,31 @@ select {
   font-size: 14px;
 }
 
+
+/* Automation Scope */
+
+.process-note {
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: #f7f9fc;
+  border: 1px solid #e4e8ef;
+  border-radius: 8px;
+}
+
+.process-note strong {
+  font-size: 13px;
+}
+
+.process-note p {
+  margin: 6px 0 0;
+  color: #667085;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* Human Review */
+
 .review-note {
   margin-bottom: 0;
   padding: 12px 14px;
@@ -239,6 +356,7 @@ select {
   color: #856404 !important;
   font-size: 13px;
 }
+
 
 /* Toast */
 
@@ -262,11 +380,23 @@ select {
   transform: translateY(0);
 }
 
+
 /* Responsive */
 
 @media (max-width: 800px) {
+
   .record-details {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .flow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .flow-arrow {
+    text-align: center;
+    transform: rotate(90deg);
   }
 
   main {
