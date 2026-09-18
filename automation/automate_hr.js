@@ -1,15 +1,9 @@
-const fs = require("fs");
 const { chromium } = require("playwright");
+const { extractReferenceNotes } = require("./extract_reference");
 
 (async () => {
-  const referencePath = "automation/references/onboarding_reference.txt";
-
-  // Read the reference file
-  const referenceText = fs.readFileSync(referencePath, "utf8").trim();
-
-  if (!referenceText) {
-    throw new Error("Reference file is empty.");
-  }
+  // Extract only the relevant Notes for HR section from the DOCX
+  const referenceText = await extractReferenceNotes();
 
   const browser = await chromium.launch({
     channel: "chrome",
@@ -22,7 +16,7 @@ const { chromium } = require("playwright");
     // Open the HR onboarding prototype
     await page.goto("http://127.0.0.1:8000");
 
-    // Transfer the reference information into the HR note field
+    // Fill the HR note field with extracted reference information
     await page.fill("#ob-note", referenceText);
     await page.locator("#ob-note").dispatchEvent("input");
     await page.locator("#ob-note").dispatchEvent("change");
@@ -34,8 +28,8 @@ const { chromium } = require("playwright");
       throw new Error("HR note was not populated.");
     }
 
-    console.log("Reference file read successfully.");
-    console.log("Reference information transferred to HR note successfully.");
+    console.log("DOCX reference processed successfully.");
+    console.log("Relevant reference information transferred to HR note successfully.");
     console.log("Human review is now required.");
 
     await page.waitForTimeout(3000);
