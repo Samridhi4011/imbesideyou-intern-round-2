@@ -296,3 +296,94 @@ All of the above test cases behaved as expected.
 - The browser automation is now working end-to-end with an external reference file.
 - The current implementation demonstrates automatic reference-file-to-HR-form transfer followed by human review.
 - I will keep this working version as the baseline before deciding whether to attempt actual `.docx` / Microsoft Word integration.
+
+**### Level 2 — DOCX Based Reference Extraction and Browser Automation**
+
+- After getting the basic browser automation working with an external text reference file, I decided to extend the same approach to an actual `.docx` reference document.
+- I wanted to keep this step simple instead of immediately trying to build a more complex AI-based document understanding system. The main goal was first to prove that a actual .docx document could be used as the input and that its relevant information could reach the HR form automatically.
+- I created an example onboarding reference document named `onboarding_reference.docx` under `automation/references/`. The document contains employee onboarding information, a verification checklist, and a separate `Notes for HR` section.
+- I kept this document as a local test reference because the operation logs show the repeated pattern of using Word/reference information and then transferring information into the HR onboarding system. The logs do not provide the original clipboard text itself, so I used a controlled reference document to demonstrate the automation flow without making assumptions about the exact original content.
+
+### Step 2.1 — Using an Actual DOCX File
+
+- I added the actual `.docx` file to the project instead of continuing to use only the previously created `.txt` reference file.
+- The file is stored under `automation/references/` so that the automation input is separate from the browser automation code.
+- This also makes the prototype easier to test because a different reference document can be provided later without changing the main browser automation logic.
+
+### Step 2.2 — Extracting Text from the DOCX
+
+- To read the Word document programmatically, I added the `mammoth` package to the project.
+- I created `automation/extract_reference.js` to test the document extraction separately before connecting it to Playwright.
+- The first extraction test successfully read the complete text from the `.docx` file, including the employee information, verification checklist, and the `Notes for HR` section.
+- I then refined the extractor so that it did not send the entire document to the HR form. Instead, it searches for the `Notes for HR` section and extracts the information following that section.
+- This was important because the HR form field is intended for the verification note rather than for all of the employee details contained in the reference document.
+- The final extraction test returned only the three relevant notes:
+  - The onboarding checklist has been reviewed.
+  - All required verification documents are complete.
+  - The employee is ready for final onboarding approval.
+
+### Step 2.3 — Connecting the Extracted Information to the Automation
+
+- After confirming that the relevant section could be extracted correctly, I connected the extraction function to the existing browser automation script.
+- `automate_hr.js` now imports the `extractReferenceNotes()` function from `extract_reference.js`.
+- This means the automation script no longer depends on a manually prepared text value. It first reads the actual `.docx` file and extracts the relevant reference information.
+- I kept the document extraction logic separate from the Playwright logic so that the two parts are easier to test and maintain.
+- The resulting flow is now:
+  `DOCX → text extraction → Notes for HR extraction → Playwright → HR note field`.
+
+### Step 2.4 — Filling the HR Form with Playwright
+
+- Once the relevant reference information was extracted, I used Playwright to open the local HR onboarding prototype in Google Chrome.
+- The automation fills the `#ob-note` field with the extracted reference information.
+- I also added a verification step in the script that reads the value of `#ob-note` after filling it and checks that the field is not empty.
+- This gives me a basic programmatic confirmation that the browser interaction actually populated the target field instead of only assuming that the action succeeded.
+- The browser automation uses the locally installed Google Chrome browser because the bundled Playwright Chromium browser was not suitable for my current macOS environment.
+- The automation does not click the final verification/completion action. I intentionally kept the final verification under human control so that the reference information can be reviewed before the onboarding record is completed.
+
+### Step 2.5 — End-to-End Testing
+
+- I tested the complete workflow after connecting the DOCX extraction and browser automation.
+- The test successfully read the actual `onboarding_reference.docx` file.
+- The relevant `Notes for HR` section was extracted successfully.
+- Playwright then opened the HR onboarding prototype and populated the `#ob-note` field with the extracted information.
+- I verified that the textarea contained only the relevant HR notes rather than the complete contents of the document.
+- The terminal also confirmed that the DOCX reference was processed and that the relevant reference information was transferred successfully.
+- The automation stopped at the human-review stage, as intended.
+- This confirmed that the complete prototype flow works from a real `.docx` input through to the HR form.
+
+### Current Automation Flow
+
+The current prototype can be summarized as:
+
+`onboarding_reference.docx`
+→ `Mammoth`
+→ `Notes for HR extraction`
+→ `Playwright`
+→ `HR #ob-note`
+→ `Human Review`
+
+- This extends the initial Level 1 prototype by replacing the manually prepared text input with information extracted from an actual .docx file.
+- At the same time, I have kept the implementation deliberately simple and deterministic so that the working part of the prototype remains easy to understand and test.
+
+### Current Scope and Limitations
+
+- The current implementation extracts the `Notes for HR` section based on its heading. It does not attempt to understand arbitrary document layouts or decide independently which information is important.
+- The reference document used for testing is a controlled example document created for the prototype. It is not claimed to be the original Word document used in the logged production workflow.
+- The operation logs indicate the repeated movement of information from reference documents into the HR system, but the raw logs do not expose the full clipboard text. Therefore, I did not try to reconstruct the exact original business content from the logs.
+- The prototype also does not automatically make the final HR approval decision. A human still reviews the populated note and performs the final verification.
+- I consider this scope appropriate for the current assignment because it demonstrates the repetitive data-transfer part of the workflow while avoiding unsupported assumptions about the underlying HR decision logic.
+
+### Why I Kept the Scope Limited
+
+- I considered adding more advanced document understanding or AI-based relevance extraction, but I decided not to make that the first implementation.
+- The main automation opportunity identified from Dataset B was the repeated reference-to-HR-form interaction. The current prototype directly addresses this repetitive step.
+- Adding AI-based extraction at this stage would introduce another dependency and another possible source of incorrect information without being necessary to demonstrate that the basic workflow can be automated.
+- If this prototype were extended further, a later version could support more varied document formats and more flexible extraction rules, followed by stronger validation before information is entered into the HR system.
+
+### Level 2 Status
+
+- The actual `.docx` input, relevant information extraction, browser automation, and end-to-end test are now working.
+- The prototype demonstrates an automated DOCX-to-HR-note transfer followed by human review.
+- The automation reads the `.docx` file, extracts the `Notes for HR` section, opens the HR interface, fills the `#ob-note` field, and verifies that the field has been populated.
+- The final review and verification remain manual by design.
+- I have kept this working version as the current baseline before making any further changes.
