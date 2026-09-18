@@ -224,7 +224,7 @@ to the user.
   - `nyusha_checklist_shinsotsu_batch`
   - `gyomu_itaku_ukeire_tetsuzuki`
   - `gyomu_itaku_kyuuyo_kitei`
-- Selecting a reference document and clicking `Prepare Note` automatically prepares and inserts a corresponding note into the `ob-note` field.
+- Selecting a reference document and clicking `Transfer Reference to HR Note` automatically prepares and inserts a corresponding note into the `ob-note` field.
 - The generated note can be manually edited before completion.
 - The `照合完了` action remains disabled until a note has been prepared, providing a basic safety check.
 - After human review, the user can complete the verification and the prototype changes the record status to `完了`.
@@ -248,3 +248,35 @@ All of the above test cases behaved as expected.
 - The prototype focuses on reducing repetitive data-entry work rather than attempting to automate the underlying HR decision.
 - Human review is intentionally retained before completion because the raw logs do not expose the actual clipboard text or enough business context to determine whether a particular note is correct.
 - The original HR application used during data collection was not available in the current development environment, so the prototype reproduces the relevant observed interaction as a self-contained local demonstration rather than connecting to the original application.
+
+----------------------------------------------------------------------------------------------------------
+
+**### Level 1 — Working Browser Automation**
+
+- After completing the initial prototype, I wanted to check whether the workflow could be automated through an actual browser interaction rather than only simulating the steps in the UI.
+- I decided to start with a small Level 1 automation instead of immediately trying to integrate Microsoft Word or the original HR application. This keeps the scope manageable and also gives me a working baseline before adding more complexity.
+- I added Playwright as a project dependency and used the locally installed Google Chrome browser for the automation.
+- The automation script is kept separately under the `automation/` directory.
+- The current automation opens the local HR onboarding prototype, selects a reference document, clicks the `Transfer Reference to HR Note` action, and checks whether the `ob-note` field has actually been populated.
+- This means the browser interaction itself is automated rather than being performed manually by the user.
+- I intentionally stop the automation after the note is populated and leave the record in the human-review stage. The final `照合完了` action is still performed by the user.
+
+**### Automation Testing**
+
+- I tested the automation on the local HR onboarding prototype using Google Chrome.
+- The script successfully opened the HR application in the browser.
+- It successfully selected the reference document and triggered the reference-to-HR transfer action.
+- The `ob-note` field was populated successfully, and the script verified that the field was not empty.
+- The automation then stopped and reported that human review was required.
+- This confirmed that the basic browser automation works end-to-end for the selected interaction.
+
+**### Current Limitation**
+
+- The current Level 1 automation does not directly read content from a live Microsoft Word application.
+- The reference information used by the prototype is still represented by predefined reference data, since the raw Dataset B logs do not expose the actual clipboard text.
+- Therefore, I am treating this version as a working browser-automation baseline rather than claiming that it already performs full Word-to-HR data extraction.
+
+**### Next Step**
+
+- Since the basic browser automation is working, I can now consider extending the input side so that the automation can work with an actual reference file instead of predefined reference data.
+- I will only add this extra layer if it can be done reliably within the remaining time, without making the current working prototype unstable.
