@@ -280,3 +280,19 @@ All of the above test cases behaved as expected.
 
 - Since the basic browser automation is working, I can now consider extending the input side so that the automation can work with an actual reference file instead of predefined reference data.
 - I will only add this extra layer if it can be done reliably within the remaining time, without making the current working prototype unstable.
+
+**### Level 1 Update — Reference File Integration**
+
+- I extended the Level 1 automation so that the reference information is no longer kept directly inside the automation script.
+- I created a separate reference file under `automation/references/` and moved the onboarding reference information into it.
+- The automation script now reads this reference file before opening the HR onboarding page.
+- After reading the file, Playwright opens the HR prototype in Chrome and directly fills the `ob-note` field with the contents of the reference file.
+- I tested this flow multiple times and confirmed that the reference file is read successfully and the HR note is populated automatically.
+- The automation still stops at the human-review stage, so the final verification is not completed automatically.
+- This makes the Level 1 prototype closer to the intended workflow while keeping the implementation simple and reliable.
+
+**### Level 1 Status**
+
+- The browser automation is now working end-to-end with an external reference file.
+- The current implementation demonstrates automatic reference-file-to-HR-form transfer followed by human review.
+- I will keep this working version as the baseline before deciding whether to attempt actual `.docx` / Microsoft Word integration.
