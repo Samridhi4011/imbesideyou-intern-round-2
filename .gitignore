@@ -14,4 +14,4 @@ data/dataset_b/
 
 # OS / editor
 .DS_Store
-.vscode/
+.vscode/node_modules/
