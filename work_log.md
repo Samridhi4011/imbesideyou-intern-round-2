@@ -387,3 +387,6 @@ The current prototype can be summarized as:
 - The automation reads the `.docx` file, extracts the `Notes for HR` section, opens the HR interface, fills the `#ob-note` field, and verifies that the field has been populated.
 - The final review and verification remain manual by design.
 - I have kept this working version as the current baseline before making any further changes.
+
+### Day 7 / Final Stage:
+Extended the HR automation to process a DOCX reference file using Mammoth and extract the Notes for HR section. Connected the extracted information to the Playwright browser automation and successfully tested the complete DOCX-to-HR form workflow. Finalised the README, report, and submission files.
