@@ -79,7 +79,7 @@ Implement the first segmentation script and evaluate it on Dataset A.
 
 ----------------------------------------------------------------------------------------------------------
 
-## Segmentation Experiments — Dataset A
+## Day 3 - Segmentation Experiments — Dataset A
 
 ### Baseline V1
 
@@ -123,7 +123,7 @@ Implement the first segmentation script and evaluate it on Dataset A.
 
 ----------------------------------------------------------------------------------------------------------
 
-## Dataset B Exploration
+## Day 4 - Dataset B Exploration
 
 - After getting a reasonably good result from V3 on Dataset A, I added Dataset B to the repository and applied the segmentation approach to it.
 - Since Dataset B does not have ground truth, I could not directly calculate IoU or compare the boundaries in the same way as Dataset A.
@@ -251,7 +251,7 @@ All of the above test cases behaved as expected.
 
 ----------------------------------------------------------------------------------------------------------
 
-**### Level 1 — Working Browser Automation**
+**### Day 6 - Level 1 — Working Browser Automation**
 
 - After completing the initial prototype, I wanted to check whether the workflow could be automated through an actual browser interaction rather than only simulating the steps in the UI.
 - I decided to start with a small Level 1 automation instead of immediately trying to integrate Microsoft Word or the original HR application. This keeps the scope manageable and also gives me a working baseline before adding more complexity.
